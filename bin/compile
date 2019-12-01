@@ -14,7 +14,7 @@ CACHE_DIR=$2
 ENV_DIR=$3
 
 # Default Hugo version
-DEFAULT_HUGO_VERSION="0.26"
+DEFAULT_HUGO_VERSION="0.60.1"
 
 # attempt to extract the HUGO_VERSION parameter form the Heroku configuration vars, fall back to the default version if unavailable
 if [ -d "$ENV_DIR" -a -e "$ENV_DIR/HUGO_VERSION" ]; then
@@ -35,12 +35,18 @@ mkdir -p $CACHE_DIR
 if ! [ -e $CACHE_DIR/$FILE_NAME ]; then
   echo "\n-----> Fetching Hugo ${HUGO_VERSION} binaries at ${HUGO_PACKAGE}"
   curl $HUGO_PACKAGE -L -s -o $CACHE_DIR/$FILE_NAME | indent
+  ls $CACHE_DIR/ | indent
 fi
 
 # Extract the binary in the working directory
 echo "\n-----> Extracting Hugo ${HUGO_VERSION} binaries to ${BUILD_DIR}"
 mkdir -p $CACHE_DIR/$RELEASE_NAME | indent
-tar -zxvf $CACHE_DIR/$FILE_NAME -C $CACHE_DIR | indent
+if tar -zxvf $CACHE_DIR/$FILE_NAME -C $CACHE_DIR
+then
+  echo "\nSuccessfuly unpacked release"
+else
+  exit 1
+fi | indent
 mv $CACHE_DIR/hugo $BUILD_DIR/hugo | indent
 
 # Fetch a theme specified in the .hugotheme file
