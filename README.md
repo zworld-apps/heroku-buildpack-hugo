@@ -2,7 +2,25 @@ Heroku buildpack: Hugo
 ===
 
 This is a [Heroku buildpack](https://devcenter.heroku.com/articles/buildpacks)
-for sites powered by [Hugo](https://github.com/spf13/hugo).
+for sites powered by [Hugo](https://github.com/spf13/hugo). This fork differs
+from the original buildpack in two improvements:
+  - The possibility to use Hugo's extended version.
+  - Organized project structure:
+  
+    ```
+      project
+      ├── public            # Where hugo static website will be generated
+      ├── web               # Where hugo website template is stored
+      │   ├── content
+      │   ├── data
+      │   ├── static
+      │   ├── layouts
+      │   ├── resources
+      │   ├── themes
+      │   └── config.toml
+      ├── main.go           # Use any language to host the website (multiple buildpacks)
+      └── README.md
+    ```
 It uses the latest stable version of Hugo.
 
 Usage
